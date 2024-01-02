@@ -158,6 +158,8 @@ def process_directory(repo, path):
     parent = None
     for index, file in enumerate(files):
         print(f"[-] Reading file {file.name}")
+        if file.name in ['001.md', '002.md', '003.md', '004.md', '008.md', '009.md', '023.md', '033.md', '037.md', '046.md', '081.md', '093.md', '118.md', '120.md', '134.md', '145.md']:
+            continue
         last_file = index == len(files) - 1
 
         file = ContentFileExtended.cast(file)
@@ -338,7 +340,7 @@ def main():
 
     # Ensure issue IDs are sequential
     actual_issue_ids = list(issues.keys())
-    expected_issue_ids = list(range(1, max(actual_issue_ids) + 1))
+    expected_issue_ids = [x for x in list(range(1, max(actual_issue_ids) + 1)) if x not in [1,2,3,4,8,9,23,33,37,46,81,93,118,120,134,145]]
     missing_issue_ids = [x for x in expected_issue_ids if x not in actual_issue_ids]
     assert (
         actual_issue_ids == expected_issue_ids
