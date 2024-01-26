@@ -109,6 +109,12 @@ Thank you, escalation removed
 
 We have fixed this bug at this PR: https://github.com/DODOEX/dodo-gassaving-pool/pull/15
 
+**CergyK**
+
+> We have fixed this bug at this PR: [DODOEX/dodo-gassaving-pool#15](https://github.com/DODOEX/dodo-gassaving-pool/pull/15)
+
+Fix LGTM
+
 # Issue M-1: Adjusting "_I_" will create a sandwich opportunity because of price changes 
 
 Source: https://github.com/sherlock-audit/2023-12-dodo-gsp-judging/issues/40 
@@ -200,6 +206,10 @@ We think this is normal arbitrage behavior and not a bug.
 **nevillehuang**
 
 @Skyewwww Since this wasn't mention as an intended known risk, I will maintain as medium severity.
+
+**Skyewwww**
+
+We recognize that this issue exists, but after we conducted this sandwich attack test, we believe that the profit gained by an attacker using the sandwich attack is essentially the same as the profit gained by trading after a normal price change. It is very difficult for an attacker to make additional profit, so we chose not to fix it.
 
 # Issue M-2: First depositor can lock the quote target value to zero 
 
@@ -296,10 +306,37 @@ According to the quote tokens decimals, multiply the quote token balance with th
 
 **Skyewwww**
 
-When Q0=0, users can still call sellQuote which can be executed normally. When user calls sellBase, the target will be check. If target is not greater than 0, the transaction will be revert as we expected.
-![image](https://github.com/sherlock-audit/2023-12-dodo-gsp-judging/assets/113418260/8e54a7ec-0e07-4ff3-b4d7-97ea826ba9a7)
-![image](https://github.com/sherlock-audit/2023-12-dodo-gsp-judging/assets/113418260/32fceac1-1c00-4548-92e2-a52a20731e4b)
+When fix is made to #122(https://github.com/DODOEX/dodo-gassaving-pool/pull/15), sellBase and sellQuote will be reverted when quote target is zero. Besides, sellShare can work normally. So we think the current fixes are sufficient and we will not make additional fixes to this issue.
 
+**CergyK**
+
+> When fix is made to #122([DODOEX/dodo-gassaving-pool#15](https://github.com/DODOEX/dodo-gassaving-pool/pull/15)), sellBase and sellQuote will be reverted when quote target is zero. Besides, sellShare can work normally. So we think the current fixes are sufficient and we will not make additional fixes to this issue.
+
+Please note that this enables any user to DOS permanently any pool upon creation (no funds loss but still a bug), not sure if the risk is acceptable
+
+There is the simple fix to check that TARGETs are not zero after first buyShares in a pool
+
+**Skyewwww**
+
+> > When fix is made to #122([DODOEX/dodo-gassaving-pool#15](https://github.com/DODOEX/dodo-gassaving-pool/pull/15)), sellBase and sellQuote will be reverted when quote target is zero. Besides, sellShare can work normally. So we think the current fixes are sufficient and we will not make additional fixes to this issue.
+> 
+> Please note that this enables any user to DOS permanently any pool upon creation (no funds loss but still a bug), not sure if the risk is acceptable
+> 
+> There is the simple fix to check that TARGETs are not zero after first buyShares in a pool
+
+We fix this bug at this PR: https://github.com/DODOEX/dodo-gassaving-pool/pull/16
+
+**CergyK**
+
+> > > When fix is made to #122([DODOEX/dodo-gassaving-pool#15](https://github.com/DODOEX/dodo-gassaving-pool/pull/15)), sellBase and sellQuote will be reverted when quote target is zero. Besides, sellShare can work normally. So we think the current fixes are sufficient and we will not make additional fixes to this issue.
+> > 
+> > 
+> > Please note that this enables any user to DOS permanently any pool upon creation (no funds loss but still a bug), not sure if the risk is acceptable
+> > There is the simple fix to check that TARGETs are not zero after first buyShares in a pool
+> 
+> We fix this bug at this PR: [DODOEX/dodo-gassaving-pool#16](https://github.com/DODOEX/dodo-gassaving-pool/pull/16)
+
+Fix LGTM
 
 # Issue M-3: Share Price Inflation by First LP-er, Enabling DOS Attacks on Subsequent buyShares with Up to 1001x the Attacking Cost 
 
@@ -453,4 +490,10 @@ We have fixed this bug at this PR: https://github.com/DODOEX/dodo-gassaving-pool
 **Czar102**
 
 Because of the fact that this is "just" DoS (no loss of funds) and there are serious constraints on whether the attack is possible and there are high capital requirements for performing it, will make it a valid Medium.
+
+**CergyK**
+
+> We have fixed this bug at this PR: [DODOEX/dodo-gassaving-pool#14](https://github.com/DODOEX/dodo-gassaving-pool/pull/14)
+
+Fix looks good
 
